@@ -1,14 +1,24 @@
 import os
-from flask import Flask
+from flask import Flask, render_template, request, url_for, flash, redirect
+from werkzeug.utils import redirect
+
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods=('GET', 'POST'))
 def main():
-    return "Welcome!"
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
 
-@app.route('/how are you')
-def hello():
-    return 'I am good, how about you?'
+        if not content:
+            flash('Content is required!')
+        else:
+            return redirect(url_for('result'))
+    return render_template('index.html')
+
+@app.route('/result')
+def result():
+    return render_template('result.html')
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0", port=8081)
